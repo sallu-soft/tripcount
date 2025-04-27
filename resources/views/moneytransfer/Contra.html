@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clifford: '#da373d',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+   
+  </style>
+</head>
+
+<body class="flex ">
+  
+  <main class="mx-auto w-[65%] ">
+   
+    <!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clifford: '#da373d',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+   
+  </style>
+</head>
+
+<body class="flex ">
+  
+  <main class="mx-auto w-[75%] ">
+    <div id="addAgent mt-8">
+        <h1 class="mb-4 text-3xl w-[80%] mx-auto font-bold">Add Contra</h1>
+        <div class="addagent w-[90%] md:w-[80%] p-7 mx-auto bg-white shadow-lg rounded-lg">
+            
+            <form action="/addagent" method="POST">
+               
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-10">
+                    <div class="mb-4">
+                        <label for="branch" class="block text-sm font-medium text-gray-700">Banch:</label>
+                        <input type="text" id="branch" name="branch" class="mt-1 p-2 w-full border " placeholder="Enter your name" value="Company Name">
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="transaction_date" class="block text-sm font-medium text-gray-700">Transaction Date:</label>
+                        <input type="date" id="transaction_date" name="transaction_date" class="mt-1 p-2 w-full border " placeholder="Enter your phone number" required>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-10">
+                    <div class="mb-4">
+                        <label for="from_account" class="block text-sm font-medium text-gray-700">From Account:</label>
+                        <select id="from_account" name="from_account" class="mt-1 p-2 w-full border " placeholder="Enter an from_account">
+                            <option value="">Hello</option>
+                        </select>
+                    </div>
+        
+                    <div class="mb-4">
+                        <label for="to_account" class="block text-sm font-medium text-gray-700">To Account:</label>
+                        <select id="to_account" name="to_account" class="mt-1 p-2 w-full border " placeholder="Enter an to_account">
+                            <option value="">To</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-10">
+                    <div class="mb-4">
+                        <label for="amount" class="block text-sm font-medium text-gray-700">Amount:</label>
+                        <input type="text" id="amount" name="amount" class="mt-1 p-2 w-full border " placeholder="Enter a amount">
+                    </div>
+                    <div class="mb-4">
+                        <label for="remarks" class="block text-sm font-medium text-gray-700">Remarks:</label>
+                        <textarea id="remarks" name="remarks" class="mt-1 p-2 w-full border " placeholder="Enter an remarks" ></textarea>
+                    </div>
+        
+                  
+                </div>
+               
+    
+                <button type="submit" class="bg-black text-white px-4 py-2 rounded-lg">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div class="allagents mt-8 shadow-lg bg-white rounded-lg">
+        <table class="table table-striped table-hover no-wrap w-full" id="agenttable">
+            <thead class="bg-[#7CB0B2]">
+                <tr>
+                    <th class="px-4 py-2 text-left">Serial</th>
+                    <th class="px-4 py-2 text-left">Date</th>
+                    <th class="px-4 py-2 text-left">From</th>
+                    <th class="px-4 py-2 text-left">To</th>
+                    <th class="px-4 py-2 text-left">Amount</th>
+                    <th class="px-4 py-2 text-left">Action</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm divide-y divide-gray-400">
+                    <tr>
+                        <td class="px-4 py-2"> 1 </td>
+                        <td class="px-4 py-2">21-03-2024</td>
+                        <td class="px-4 py-2">Jane Alam</td>
+                        <td class="px-4 py-2">Mishuk</td>
+                        <td class="px-4 py-2">70000</td>
+                        <td class="px-4 py-2">Delete</td>
+                        
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2"> 1 </td>
+                        <td class="px-4 py-2">21-03-2024</td>
+                        <td class="px-4 py-2">Jane Alam</td>
+                        <td class="px-4 py-2">Mishuk</td>
+                        <td class="px-4 py-2">70000</td>
+                        <td class="px-4 py-2">Delete</td>
+                        
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2"> 1 </td>
+                        <td class="px-4 py-2">21-03-2024</td>
+                        <td class="px-4 py-2">Jane Alam</td>
+                        <td class="px-4 py-2">Mishuk</td>
+                        <td class="px-4 py-2">70000</td>
+                        <td class="px-4 py-2">Delete</td>
+                        
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+  </main>
+ 
+</body>
+
+</html>
+  </main>
+  
+  <script src="https://unpkg.com/flowbite@1.4.0/dist/flowbite.js"></script>
+</body>
+
+</html>
