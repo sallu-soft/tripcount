@@ -160,32 +160,52 @@
         //     document.body.innerHTML = originalContents;
         // }
 
-        function printReport() {
-            var printContents = document.getElementById("reportdiv").innerHTML;
-            var printWindow = window.open("", "", "width=900,height=700");
-
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Print Report</title>
-                        <link rel="stylesheet" href="path/to/your/styles.css">
-                    </head>
-                    <body>${printContents}</body>
-                </html>
-            `);
-
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => {
-                printWindow.print();
-                printWindow.close();
-            }, 500);
-        }
+        
 
     
-        // Add event listener to the "Print" button
-        document.querySelector("#printButton").addEventListener("click", function() {
-            printReport();
+        function printReport() {
+            const reportDiv = document.getElementById("reportdiv");
+            if (!reportDiv) {
+                console.error("Error: Report div not found");
+                return;
+            }
+
+            const printWindow = window.open("", "_blank", "width=900,height=700");
+            if (!printWindow) {
+                // Fallback: Print in current window
+                const originalHTML = document.body.innerHTML;
+                document.body.innerHTML = reportDiv.innerHTML;
+                setTimeout(() => {
+                    window.print();
+                    document.body.innerHTML = originalHTML;
+                }, 1000);
+                return;
+            }
+
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                    <head><title>Print Report</title></head>
+                    <body>${reportDiv.innerHTML}</body>
+                </html>
+            `);
+            printWindow.document.close();
+
+            printWindow.onload = function() {
+                setTimeout(() => {
+                    printWindow.print();
+                    setTimeout(() => printWindow.close(), 3000);
+                }, 500); // Extra buffer for slow rendering
+            };
+        }
+
+       
+        // Safe event listener
+        document.addEventListener("DOMContentLoaded", () => {
+            const printButton = document.getElementById("printButton");
+            if (printButton) {
+                printButton.addEventListener("click", printReport);
+            }
         });
 
         function downloadReport() {
