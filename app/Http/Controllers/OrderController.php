@@ -41,9 +41,12 @@ class OrderController extends Controller
             $latestId = DB::table('contracts')->latest('id')->value('id');
             $contract_invoice = 'INV-000'.$latestId+1;
 
+            $lastIdOrder = DB::table('order')->latest('id')->value('id');
+            $order_invoice = 'VS-000'.$lastIdOrder + 1;
+
             // $contract_services = ContractService::where()
             // dd($contract_invoice);
-            return view('order/index', compact('suppliers', 'agents', 'types', 'orders', 'contracts', 'contract_invoice'));
+            return view('order/index', compact('suppliers', 'agents', 'types', 'orders', 'contracts', 'contract_invoice', 'order_invoice'));
         }
         else{
             return view('welcome');

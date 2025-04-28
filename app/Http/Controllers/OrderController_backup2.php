@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Auth; // Add this line
 use App\Models\Supplier;
 use App\Models\Agent;
 use App\Models\Type;
+
+use App\Models\Contract;
+use App\Models\ContractService;
+
 use App\Models\Order;
 use Illuminate\View\View;
 use DateTime;
@@ -25,7 +29,21 @@ class OrderController extends Controller
             $types = Type::where([['is_delete',0],['is_active',1],['user',$user]])->get();
             $orders = Order::where([['is_delete',0],['is_active',1],['user', $user]])->get();
      
-            return view('order/index', compact('suppliers', 'agents', 'types', 'orders'));
+            $contracts = DB::table('contracts')
+            ->leftJoin('agent', 'contracts.agent', '=', 'agent.id')
+            ->where('contracts.user', $user)
+            ->select(
+                'contracts.*',
+                'agent.name as agent_name'
+            )
+            ->get();
+
+            $latestId = DB::table('contracts')->latest('id')->value('id');
+            $contract_invoice = 'INV-000'.$latestId+1;
+
+            // $contract_services = ContractService::where()
+            // dd($contract_invoice);
+            return view('order/index', compact('suppliers', 'agents', 'types', 'orders', 'contracts', 'contract_invoice'));
         }
         else{
             return view('welcome');
@@ -33,6 +51,20 @@ class OrderController extends Controller
        
     }
 
+    public function index_new(){
+        if(Auth::user()){
+            $user = Auth::id();
+            $suppliers = Supplier::where([['is_delete',0],['is_active',1],['user',$user]])->get();
+            $agents = Agent::where([['is_delete',0],['is_active',1],['user',$user]])->get();
+            $types = Type::where([['is_delete',0],['is_active',1],['user',$user]])->get();
+            $orders = Order::where([['is_delete',0],['is_active',1],['user', $user]])->get();
+     
+            return view('order/index_new', compact('suppliers', 'agents', 'types', 'orders'));
+        }
+        else{
+            return view('welcome');
+        }
+    }
 
     public function orderExists($type, $passport_no)
     {
@@ -404,58 +436,60 @@ class OrderController extends Controller
             return view('welcome');
         }
     }
-        public function view($id){
-            if(Auth::user()){
-                $order = Order::findOrFail($id); 
-                $agent = Agent::where('id', $order->agent)->first();
-                $type = Type::where('id', $order->type)->value('name');
-                return view('order.view', compact('order', 'agent','type'));
-            }
-            else{
-                return view('welcome');
-            }
-          
+
+    public function view($id){
+        if(Auth::user()){
+            $order = Order::findOrFail($id); 
+            $agent = Agent::where('id', $order->agent)->first();
+            $type = Type::where('id', $order->type)->value('name');
+            return view('order.view', compact('order', 'agent','type'));
         }
-        public function delete($id)
-        {
-            if(Auth::user()){
-                DB::beginTransaction();
+        else{
+            return view('welcome');
+        }
+        
+    }
+
+    public function delete($id)
+    {
+        if(Auth::user()){
+            DB::beginTransaction();
+        
+            try {
+                // Fetch the order and check if it exists
+                $order = Order::findOrFail($id);
+                $order->is_delete = 1; // Soft delete (or change this based on your deletion logic)
             
-                try {
-                    // Fetch the order and check if it exists
-                    $order = Order::findOrFail($id);
-                    $order->is_delete = 1; // Soft delete (or change this based on your deletion logic)
-                
-                    // Update the agent's amount
-                    $agent = Agent::find($order->agent);
-                    if ($agent) {
-                        $agent->amount -= $order->contact_amount;
-                        $agent->save();
-                    }
-                
-                    // Update the supplier's amount
-                    $supplier = Supplier::find($order->supplier);
-                    if ($supplier) {
-                        $supplier->amount -= $order->payable_amount;
-                        $supplier->save();
-                    }
-                
-                    // Save the order after marking it as deleted
-                    if ($order->save()) {
-                        DB::commit(); // Commit the transaction
-                        return redirect()->route('order.view')->with('success', "Order #{$order->id} deleted successfully");
-                    } else {
-                        DB::rollBack(); // Rollback the transaction if saving the order fails
-                        return redirect()->route('order.view')->with('error', 'Order deletion failed');
-                    }
-                } catch (\Exception $e) {
-                    DB::rollBack(); // Rollback the transaction in case of any exception
-                    return redirect()->route('order.view')->with('error', 'Order deletion failed: ' . $e->getMessage());
+                // Update the agent's amount
+                $agent = Agent::find($order->agent);
+                if ($agent) {
+                    $agent->amount -= $order->contact_amount;
+                    $agent->save();
                 }
-            } else {
-                return view('welcome');
+            
+                // Update the supplier's amount
+                $supplier = Supplier::find($order->supplier);
+                if ($supplier) {
+                    $supplier->amount -= $order->payable_amount;
+                    $supplier->save();
+                }
+            
+                // Save the order after marking it as deleted
+                if ($order->save()) {
+                    DB::commit(); // Commit the transaction
+                    return redirect()->route('order.view')->with('success', "Order #{$order->id} deleted successfully");
+                } else {
+                    DB::rollBack(); // Rollback the transaction if saving the order fails
+                    return redirect()->route('order.view')->with('error', 'Order deletion failed');
+                }
+            } catch (\Exception $e) {
+                DB::rollBack(); // Rollback the transaction in case of any exception
+                return redirect()->route('order.view')->with('error', 'Order deletion failed: ' . $e->getMessage());
             }
+        } else {
+            return view('welcome');
         }
+    }
 
 }
 
